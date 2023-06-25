@@ -84,11 +84,14 @@ Nos piden mostrar la nueva fecha renombrada como FechaRetrasada.
 💡 Pista 💡 Para realizar lo anterior, busca documentación de la función DATE_ADD 
 para MySQL.*/
 
-/*
-SELECT order_id AS NumeroPedido, order_date AS FechaPedido, shipped_date AS FechaEnvio, shipped_date-order_date AS FechaRetrasada
+
+SELECT order_id AS NumeroPedido, order_date AS FechaPedido, 
+DATE_ADD(order_date, INTERVAL 5 DAY) AS FechaRetrasada
 FROM orders
-ORDER BY FechaRetrasada;
-*/
+WHERE shipped_date = 0;
+
+/*Este código muestra las fechas de los pedidos que aún no tienen shipped date (no han sido enviados) 
+y la que sería la fecha a partir de la que se consideraría que el pedido sale con retraso*/
 
 /*
 DATE_ADD: https://parzibyte.me/blog/2018/12/05/sumar-restar-fechas-mysql-date_add-date_sub/
@@ -96,7 +99,8 @@ FUNCIÓN -> DATE_ADD(fecha, intervalo de tiempo)
 EJEMPLO -> select DATE_ADD('2018-01-01', INTERVAL 364 DAY);
 */
 
-SELECT order_id AS NumeroPedido, order_date AS FechaPedido, required_date AS FechaRequerida, shipped_date AS FechaEnvio, DATE_ADD(required_date, INTERVAL 5 DAY) AS FechaRetrasada
+SELECT order_id AS NumeroPedido, order_date AS FechaPedido, required_date AS FechaRequerida, 
+shipped_date AS FechaEnvio, DATE_ADD(required_date, INTERVAL 5 DAY) AS FechaRetrasada
 FROM orders
 WHERE shipped_date >= DATE_ADD(required_date, INTERVAL 5 DAY);
 #no tengo claro si la fe4cha retrasada es shipped_date o si es required_date más cinco días.
