@@ -50,6 +50,8 @@ SELECT order_id AS Numero_Pedido, unit_price*quantity AS Importe_Total
 FROM order_details
 ORDER BY Importe_Total  DESC
 LIMIT 3;
+ 
+# Así no es porque lo que consulta son los productos de forma individual en vez de buscar por el orden_id para ver el total de cada pedido (y no el producto de cada pedido)
 
 /*6.Los pedidos que están entre las posiciones 5 y 10 de nuestro ranking:
 Ahora, no sabemos bien por qué razón, desde el departamento de Ventas 
@@ -67,7 +69,7 @@ De cara a ver cómo de diversificado está el negocio, se nos solicita una lista
 de las categorías que componen los tipos de pedido de la empresa. 
 Queremos que la lista de resultado sea renombrada como "NombreDeCategoria".*/
 
-SELECT category_name AS NombreDeCategoria
+SELECT DISTINCT category_name AS NombreDeCategoria
 FROM categories
 ORDER BY NombreDeCategoria;
 
@@ -82,9 +84,22 @@ Nos piden mostrar la nueva fecha renombrada como FechaRetrasada.
 💡 Pista 💡 Para realizar lo anterior, busca documentación de la función DATE_ADD 
 para MySQL.*/
 
+/*
 SELECT order_id AS NumeroPedido, order_date AS FechaPedido, shipped_date AS FechaEnvio, shipped_date-order_date AS FechaRetrasada
 FROM orders
 ORDER BY FechaRetrasada;
+*/
+
+/*
+DATE_ADD: https://parzibyte.me/blog/2018/12/05/sumar-restar-fechas-mysql-date_add-date_sub/
+FUNCIÓN -> DATE_ADD(fecha, intervalo de tiempo)
+EJEMPLO -> select DATE_ADD('2018-01-01', INTERVAL 364 DAY);
+*/
+
+SELECT order_id AS NumeroPedido, order_date AS FechaPedido, required_date AS FechaRequerida, shipped_date AS FechaEnvio, DATE_ADD(required_date, INTERVAL 5 DAY) AS FechaRetrasada
+FROM orders
+WHERE shipped_date >= DATE_ADD(required_date, INTERVAL 5 DAY);
+#no tengo claro si la fe4cha retrasada es shipped_date o si es required_date más cinco días.
 
 /*9.Selecciona los productos más rentables:
 Gracias a un análisis realizado en los últimos meses en la empresa, se ha comprobado 
@@ -92,8 +107,17 @@ que el rango de productos que puede dar más beneficios parece ser el de aquello
 con un precio mayor o igual a 15 dólares, pero menor o igual que 50 dólares. 
 Selecciona los datos de ese rango de productos usando el operador BETWEEN.*/
 
+SELECT product_id, unit_price
+FROM products
+WHERE unit_price BETWEEN 15 AND 50
+ORDER BY product_id;
+
 /*10.Selecciona los productos con unos precios dados:
 Queremos conocer los datos de los productos que tengan exactamente 
 un precio de 18, 19 o 20 dólares (un rango muy concreto de precios del que 
 la empresa quiere maximizar sus ventas en un futuro). Usa IN para conseguirlo 
 de manera eficiente.*/
+
+SELECT *
+FROM products
+WHERE unit_price IN (18, 19, 20);
