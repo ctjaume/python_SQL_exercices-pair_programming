@@ -61,7 +61,7 @@ en cuanto al coste económico total ImporteTotal.*/
 SELECT order_id AS Numero_Pedido, unit_price*quantity AS Importe_Total
 FROM order_details
 ORDER BY Importe_Total DESC
-LIMIT 10
+LIMIT 6
 OFFSET 4;
 
 /*7.Qué categorías tenemos en nuestra BBDD:
@@ -103,7 +103,11 @@ SELECT order_id AS NumeroPedido, order_date AS FechaPedido, required_date AS Fec
 shipped_date AS FechaEnvio, DATE_ADD(required_date, INTERVAL 5 DAY) AS FechaRetrasada
 FROM orders
 WHERE shipped_date >= DATE_ADD(required_date, INTERVAL 5 DAY);
-#no tengo claro si la fe4cha retrasada es shipped_date o si es required_date más cinco días.
+
+#no tengo claro si la fe4cha retrasada es shipped_date o si es required_date más cinco días. Sería con shipped_date
+/*SELECT shipped_date DATE_ADD(shipped_date, INTERVAL 5 DAY) AS `FechaRetrasada`
+FROM orders;*/
+
 
 /*9.Selecciona los productos más rentables:
 Gracias a un análisis realizado en los últimos meses en la empresa, se ha comprobado 
