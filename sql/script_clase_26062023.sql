@@ -27,18 +27,22 @@ FROM products
 WHERE unit_price > 28.866
 ORDER BY unit_price DESC;
 
-/*5.Seleccionad las ciudades con 4 o más empleadas:
-Desde recursos humanos nos piden seleccionar los nombres de las ciudades con 4 o más empleadas de cara a estudiar la apertura de nuevas oficinas.*/
+/*5.Qué productos se han descontinuado:
+De cara a estudiar el histórico de la empresa nos piden una consulta para conocer el número de productos que se han descontinuado. El atributo Discontinued es un booleano: si es igual a 1 el producto ha sido descontinuado.*/
+SELECT COUNT(product_id)
+FROM products
+WHERE discontinued = 1;
 
-SELECT DISTINCT(city), COUNT(city)
-FROM employees;
+/*6.Detalles de los productos de la query anterior:
+Adicionalmente nos piden detalles de aquellos productos no descontinuados, sobre todo el ProductID y ProductName. Como puede que salgan demasiados resultados, nos piden que los limitemos a los 10 con ID más elevado, que serán los más recientes. No nos
+ pueden decir del departamento si habrá pocos o muchos resultados, pero lo limitamos por si acaso.*/
+ 
+ SELECT product_id, product_name
+ FROM products
+ WHERE discontinued = 0
+ ORDER BY product_id DESC   
+ LIMIT 10;
 
-SELECT city, employee_id
-FROM employees
-WHERE 4 employee_id >= city 
 
-, employee_id
-FROM employees
-WHERE employee_id >= 4;
-
-
+ 
+ 
